@@ -28,7 +28,7 @@ app.use(session({
 // Initialize SQLite Database
 let db = new sqlite3.Database('users');
 
-// Serve static files (e.g., CSS, JS)
+// Serve static test-files (e.g., CSS, JS)
 app.use(express.static(path.join(__dirname, 'public_html')));
 
 

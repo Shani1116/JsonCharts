@@ -72,7 +72,7 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variable files
+# dotenv environment variable test-files
 .env
 .env.development.local
 .env.test.local
@@ -91,7 +91,7 @@ out
 .nuxt
 dist
 
-# Gatsby files
+# Gatsby test-files
 .cache/
 # Comment in the public line in if your project uses Gatsby and not Next.js
 # https://nextjs.org/blog/next-9-1#public-directory-support
@@ -104,7 +104,7 @@ dist
 .temp
 .cache
 
-# Docusaurus cache and generated files
+# Docusaurus cache and generated test-files
 .docusaurus
 
 # Serverless directories
@@ -113,7 +113,7 @@ dist
 # FuseBox cache
 .fusebox/
 
-# DynamoDB Local files
+# DynamoDB Local test-files
 .dynamodb/
 
 # TernJS port file
