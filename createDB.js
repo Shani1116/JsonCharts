@@ -7,9 +7,6 @@ db.serialize(() => {
       username TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL
   )`);
-
-    db.run("INSERT INTO users (username, password) VALUES ('johnD@gmail.com', 'JohnDoe123')");
-    db.run("INSERT INTO users (username, password) VALUES ('mattSmith@gmail.com', 'M@ttSmith448')");
 });
 
 db.close();

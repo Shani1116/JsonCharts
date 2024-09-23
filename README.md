@@ -33,6 +33,20 @@ Before you begin, ensure you have the following installed on your machine:
     ```bash
    npm start
    ```
+## User Registration
+Before you can log in to the system, you need to register users in the database. The ``/register`` endpoint is not exposed through a form, so you'll need to use Postman to send POST requests to register users.
+
+### Registering Users with Postman
+1. Open Postman and create a new POST request to:
+   ```bash
+   http://localhost:3000/register
+   ```
+2. Set the body to ``x-www-form-urlencoded`` with the following fields:
+ - ``username``: The user's email (e.g., sophie@gmail.com).
+ - ``password``: The user's password (e.g., sophie123).
+3. Send the request to create the user.
+4. Repeat the same steps for any additional users.
+
 
 ## Usage
 1. Access the Application Open your web browser and navigate to http://localhost:3000.
