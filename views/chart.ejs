@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Chart Type - JsonCharts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Select Chart Type</h2>
+    <p>Select the type of chart you would like to generate from the uploaded JSON data.</p>
+
+    <!-- Chart Type Selection -->
+    <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action" onclick="loadChart('bar')">Bar Chart</a>
+        <a href="#" class="list-group-item list-group-item-action" onclick="loadChart('line')">Line Chart</a>
+        <a href="#" class="list-group-item list-group-item-action" onclick="loadChart('pie')">Pie Chart</a>
+        <a href="#" class="list-group-item list-group-item-action" onclick="loadChart('doughnut')">Doughnut Chart</a>
+    </div>
+
+    <!-- Chart Display Area -->
+    <div class="mt-5">
+        <canvas id="myChart" width="250" height="100" style="display: none;"></canvas>
+    </div>
+
+    <div class="mt-5">
+        <div class="feature mb-4">
+            <h3>Data Visualization</h3>
+            <p>Charts can be generated from the uploaded JSON data using <a href="https://www.chartjs.org/docs/latest/">Chart.js</a>.</p>
+            <p><strong>Implementation:</strong> Data is parsed and displayed in different chart formats based on user selection.</p>
+            <p><strong>User interaction:</strong> After uploading, users can choose from various chart types to visualize their data.</p>
+            <pre><code>
+                // Chart generation handling
+                app.get('/generate-chart/:type', (req, res) => {
+                    const jsonFilePath = path.join(__dirname, 'uploads', 'uploadedData.json');
+                    fs.readFile(jsonFilePath, 'utf8', (err, data) => {
+                        if (err) {
+                            return res.status(500).send('Error reading JSON file.');
+                        }
+
+                        const jsonData = JSON.parse(data);
+                        res.json(jsonData);
+                    });
+                });
+
+                // Chart generation logic
+                    function loadChart(chartType) {
+                        fetch(`/generate-chart/${chartType}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const jsonData = data;  // Assuming JSON data is returned in the correct format
+
+                        // Prepare labels and values
+                        const labels = jsonData.map(item => item.label);
+                        const values = jsonData.map(item => item.value);
+                        const backgroundColors = values.map(() => getRandomColor());
+
+                        // Get the canvas element and make it visible
+                        const chartCanvas = document.getElementById('myChart');
+                        chartCanvas.style.display = 'block';  // Show the canvas if it was hidden
+
+                        // Remove any existing chart instance before creating a new one
+                        if (window.myChartInstance) {
+                            window.myChartInstance.destroy();
+                        }
+
+                        // Create the chart
+                        const ctx = chartCanvas.getContext('2d');
+                        window.myChartInstance = new Chart(ctx, {
+                            type: chartType,
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Data Values',
+                                    data: values,
+                                    backgroundColor: backgroundColors,
+                                    borderColor: 'rgba(0, 0, 0, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    }
+            })
+            .catch(error => console.error('Error loading chart:', error));
+    </code></pre>
+        </div>
+    </div>
+</div>
+
+<script>
+    function getRandomColor() {
+        const r = Math.floor(Math.random() * 255);
+        const g = Math.floor(Math.random() * 255);
+        const b = Math.floor(Math.random() * 255);
+        return `rgba(${r}, ${g}, ${b}, 0.6)`; // Adjust the transparency (0.6)
+    }
+    // Fetch data and dynamically load the chart
+    function loadChart(chartType) {
+        fetch(`/generate-chart/${chartType}`)
+            .then(response => response.json())
+            .then(data => {
+                const jsonData = data;  // Assuming JSON data is returned in the correct format
+
+                // Prepare labels and values
+                const labels = jsonData.map(item => item.label);
+                const values = jsonData.map(item => item.value);
+                const backgroundColors = values.map(() => getRandomColor());
+
+                // Get the canvas element and make it visible
+                const chartCanvas = document.getElementById('myChart');
+                chartCanvas.style.display = 'block';  // Show the canvas if it was hidden
+
+                // Remove any existing chart instance before creating a new one
+                if (window.myChartInstance) {
+                    window.myChartInstance.destroy();
+                }
+
+                // Create the chart
+                const ctx = chartCanvas.getContext('2d');
+                window.myChartInstance = new Chart(ctx, {
+                    type: chartType,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Data Values',
+                            data: values,
+                            backgroundColor: backgroundColors,
+                            borderColor: 'rgba(0, 0, 0, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error loading chart:', error));
+    }
+</script>
+
+</body>
+</html>

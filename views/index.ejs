@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>JsonCharts - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="login-container">
+    <h1>JsonCharts</h1>
+    <h2 class="text-center">Login</h2>
+
+    <!-- Alert for error messages -->
+    <% if (typeof error !== 'undefined') { %>
+        <div class="alert alert-danger" role="alert">
+            <%= error %>
+        </div>
+    <% } %>
+
+    <form id="loginForm" method="POST" action="/login">
+        <div class="form-group mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+</div>
+<div class="mt-5 d-flex justify-content-center">
+    <div class="feature mb-4">
+        <h3>User Authentication</h3>
+        <p>This feature allows users to register and log in securely. Passwords are hashed using bcrypt to ensure user security.</p>
+        <p><strong>Implementation:</strong> Utilized Express, bcrypt for hashing, and SQLite for user data storage.</p>
+        <p><strong>User interaction:</strong> Users can create accounts and log in using their email and password.</p>
+        <h3>Implementation</h3>
+        <pre><code>
+                app.post('/login', (req, res) => {
+                const { email, password } = req.body;
+
+                // Query the database for the user with the entered email
+                db.get('SELECT * FROM users WHERE username = ?', [email], (err, user) => {
+                    if (err) {
+                        console.error(err.message);
+                        return res.status(500).send('Internal server error');
+                    }
+
+                    if (!user) {
+                        // If no user is found with the provided email
+                        return res.render('index', {
+                            error: 'No user found with that email.',
+                        });
+                    }
+
+                    // Compare entered password with the hashed password stored in the database
+                    bcrypt.compare(password, user.password, (err, result) => {
+                        if (err) {
+                            console.error(err.message);
+                            return res.status(500).send('Internal server error');
+                        }
+
+                        if (result) {
+                            // Password matches, successful login
+                            req.session.userId = user.id;
+                            return res.render('upload'); // Redirect to the upload page
+                        } else {
+                            // Password doesn't match
+                            return res.render('index', {
+                                error: 'Invalid password.',
+                            });
+                        }
+                    });
+                });
+            });
+            </code></pre>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
